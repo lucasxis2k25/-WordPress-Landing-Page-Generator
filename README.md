@@ -1,25 +1,19 @@
-# 🛍️ E-commerce Content & Dashboard Suite
+# 🛍️ E-commerce Content Generator
 
-> Pipeline de geração de conteúdo com IA + painel de gestão para lojas WooCommerce.
-
----
-
-## 📋 Sobre o Projeto
-
-Suite de ferramentas Python para automatizar a criação, enriquecimento e publicação de conteúdo de produtos em lojas WooCommerce, integrada a um painel interativo Streamlit para gestão e monitoramento.
-
-Desenvolvido para cenários reais de e-commerce B2B com catálogos grandes e necessidade de padronização de conteúdo.
+> Pipeline de geração automática de conteúdo de produto com IA (Gemini ou Claude) + publicação direta no WooCommerce.
 
 ---
 
-## 🚀 Funcionalidades
+## 📋 O que é este projeto
 
-- **Dashboard interativo** (Streamlit) com visão geral do catálogo
-- **Gerador de conteúdo com IA** (Google Gemini) para títulos, descrições e campos SEO
-- **Integração WooCommerce** via REST API (leitura e publicação)
-- **Pipeline de mapeamento de produtos** com validação e auditoria
-- **Módulo WordPress plugin** (`ecommerce-core`) com hooks e templates customizados
-- **Scripts utilitários**: geração de PDF, limpeza e normalização de dados
+Ferramenta Python para automatizar a criação de conteúdo técnico e SEO de produtos em lojas WooCommerce. O pipeline:
+
+1. **Raspa** os dados atuais do produto na loja
+2. **Gera** textos, schemas JSON-LD e campos ACF via IA
+3. **Valida** o conteúdo com regras de negócio configuráveis
+4. **Publica** diretamente na API REST do WooCommerce
+
+Compatível com **Google Gemini** e **Anthropic Claude** — você escolhe qual usar no `.env`.
 
 ---
 
@@ -27,117 +21,187 @@ Desenvolvido para cenários reais de e-commerce B2B com catálogos grandes e nec
 
 ```
 .
-├── dashboard.py              # Painel principal (Streamlit)
-├── ecommerce-core/           # Plugin WordPress customizado
-│   ├── assets/
-│   ├── hooks/
-│   ├── inc/
-│   └── templates/
-├── gerador/                  # Scripts de geração de conteúdo
-│   ├── automacao/            # Pipeline de publicação automática
-│   ├── revisao/              # Módulo de revisão e aprovação
-│   ├── tests/                # Testes de integração com WP API
-│   ├── auth.py               # Autenticação WooCommerce
-│   ├── config.py             # Configurações globais
-│   ├── gerar_conteudo_acf.py # Geração via ACF fields
-│   ├── gerar_lpp_ia.py       # Geração de LPP com IA
+├── dashboard.py              # Painel Streamlit de gestão
+├── gerador/
+│   ├── config.py             # Configuração central (IA + WooCommerce)
+│   ├── auth.py               # Autenticação de usuários do painel
+│   ├── regras.py             # Regras de validação de produto
 │   ├── normalizadores.py     # Normalização de dados
-│   ├── regras.py             # Regras de negócio e validação
-│   └── renderizador.py       # Renderização de templates
+│   ├── renderizador.py       # Geração de HTML/Schema dos blocos
+│   ├── gerar_lpp_ia.py       # ⭐ Script principal: gera conteúdo via IA
+│   ├── gerar_conteudo_acf.py # Geração de campos ACF
+│   ├── processar.py          # Pipeline interativo de processamento
+│   ├── catalogo.py           # Catálogo de produtos de exemplo
+│   ├── texto_pt.py           # Utilitários de texto em PT-BR
+│   ├── automacao/
+│   │   ├── builder.py        # Constrói JSON limpo do produto
+│   │   ├── scraper.py        # Scraping de dados do produto
+│   │   └── publicar_wordpress.py  # Publicação via REST API
+│   └── revisao/              # Módulo de revisão e aprovação
+├── ecommerce-core/           # Plugin WordPress customizado
 ├── mapeamento de produto/    # Pipeline de mapeamento de catálogo
-│   ├── mapping/              # Lógica de mapeamento
-│   ├── scripts/              # Scripts auxiliares
-│   └── tests/                # Testes unitários
-├── scripts/                  # Utilitários gerais
-│   ├── gerar_pdf.py
-│   └── toolbox.py
 ├── requirements.txt
-└── .env.example
+├── .env.example              # Template de configuração
+└── iniciar_dashboard.bat     # Atalho Windows para o painel
 ```
 
 ---
 
 ## ⚙️ Configuração
 
-### 1. Clone o repositório
+### 1. Clone e instale dependências
 
 ```bash
 git clone https://github.com/seu-usuario/seu-repositorio.git
 cd seu-repositorio
-```
-
-### 2. Instale as dependências
-
-```bash
 pip install -r requirements.txt
 ```
 
-### 3. Configure as variáveis de ambiente
+### 2. Crie o arquivo `.env`
 
 ```bash
 cp .env.example .env
 ```
 
-Edite o `.env` com suas credenciais:
+---
+
+## 🤖 Configurando a IA
+
+Edite o `.env` e escolha **uma** das opções:
+
+### Opção A — Google Gemini (padrão)
+
+1. Acesse [aistudio.google.com](https://aistudio.google.com) e crie uma API Key gratuita
+2. No `.env`:
 
 ```env
-# WordPress / WooCommerce REST API
-WP_USERNAME=seu_usuario
-WP_APP_PASSWORD=sua_application_password
-WP_BASE_URL=https://seu-site.com
-
-# Google Gemini (opcional — enriquece texto de mercado)
-GEMINI_API_KEY=sua_chave_gemini
+GEMINI_API_KEY=AIzaSy...sua_chave_aqui
 ```
 
-### 4. Inicie o painel
+### Opção B — Anthropic Claude
+
+1. Acesse [console.anthropic.com](https://console.anthropic.com) e crie uma API Key
+2. Instale a biblioteca extra:
+
+```bash
+pip install anthropic
+```
+
+3. No `.env`:
+
+```env
+ANTHROPIC_API_KEY=sk-ant-...sua_chave_aqui
+AI_PROVIDER=claude
+```
+
+> **Como o projeto decide qual IA usar:**
+> - Se `AI_PROVIDER=claude` → usa Claude
+> - Se `AI_PROVIDER=gemini` → usa Gemini
+> - Se `AI_PROVIDER` não estiver definido → usa Gemini se tiver `GEMINI_API_KEY`, senão tenta Claude
+> - Se ambas as chaves estiverem presentes → `AI_PROVIDER` decide (padrão: gemini)
+
+---
+
+## 🔌 Configurando o WooCommerce
+
+No painel WordPress:
+
+1. Vá em **Usuários → Seu perfil → Application Passwords**
+2. Crie uma nova senha de aplicação (ex: `"Content Bot"`)
+3. No `.env`:
+
+```env
+WP_USERNAME=seu_usuario
+WP_APP_PASSWORD=xxxx xxxx xxxx xxxx xxxx xxxx
+WP_BASE_URL=https://seu-site.com
+```
+
+---
+
+## 🚀 Como usar
+
+### Painel interativo (recomendado)
 
 ```bash
 streamlit run dashboard.py
-```
-
-Ou use o script de atalho (Windows):
-
-```bash
+# ou no Windows:
 iniciar_dashboard.bat
 ```
+
+Acesse `http://localhost:8501` no navegador.
+
+**Usuários de demonstração:**
+
+| Login | Senha | Perfil |
+|-------|-------|--------|
+| `admin` | `admin123` | Administrador |
+| `editor` | `editor123` | Editor |
+| `viewer` | `viewer123` | Visualizador |
+
+> ⚠️ Altere as senhas em `gerador/auth.py` antes de usar em produção.
+
+---
+
+### Geração via linha de comando
+
+```bash
+# Gera conteúdo para um produto pelo slug
+python gerador/gerar_lpp_ia.py nome-do-produto
+
+# Pipeline interativo (mostra catálogo e permite escolher)
+python gerador/processar.py
+
+# Geração de campos ACF
+python gerador/gerar_conteudo_acf.py nome-do-produto
+```
+
+---
+
+## 🔄 Trocando de Gemini para Claude (ou vice-versa)
+
+Basta alterar o `.env` — não precisa mudar nenhum código:
+
+```env
+# Para usar Claude:
+AI_PROVIDER=claude
+ANTHROPIC_API_KEY=sk-ant-...
+
+# Para voltar ao Gemini:
+AI_PROVIDER=gemini
+GEMINI_API_KEY=AIzaSy...
+```
+
+O `config.py` detecta automaticamente e inicializa o cliente correto.
 
 ---
 
 ## 🔌 Plugin WordPress
 
-A pasta `ecommerce-core/` contém um plugin WordPress customizado. Para instalar:
+A pasta `ecommerce-core/` contém um plugin WordPress. Para instalar:
 
-1. Copie a pasta para `wp-content/plugins/`
-2. Ative o plugin no painel do WordPress
-
----
-
-## 🧪 Testes
-
-```bash
-# Testes de integração WooCommerce API
-python -m pytest gerador/tests/
-
-# Testes do pipeline de mapeamento
-python -m pytest "mapeamento de produto/tests/"
-```
+1. Copie a pasta para `wp-content/plugins/ecommerce-core/`
+2. Ative em **Plugins → Plugins instalados**
 
 ---
 
-## 📦 Dependências Principais
+## 📦 Dependências
 
 | Pacote | Uso |
 |--------|-----|
 | `streamlit` | Painel interativo |
-| `google-generativeai` | Geração de conteúdo com IA |
-| `requests` | Integração REST API |
+| `google-generativeai` | Geração com Gemini |
+| `anthropic` | Geração com Claude *(instalar separado se usar Claude)* |
+| `requests` | Integração REST API WooCommerce |
 | `openpyxl` | Leitura/escrita de planilhas |
 
-Ver lista completa em [`requirements.txt`](requirements.txt).
+```bash
+pip install -r requirements.txt
+# Se usar Claude:
+pip install anthropic
+```
 
 ---
 
 ## 📄 Licença
 
-MIT — sinta-se livre para usar e adaptar.
+MIT — use, adapte e contribua livremente.
