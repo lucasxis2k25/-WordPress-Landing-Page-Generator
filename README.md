@@ -4,12 +4,28 @@
 
 ---
 
-## 📋 O que é este projeto
+## 💡 Para quem é este projeto?
 
-Ferramenta Python para automatizar a criação de landing pages de produto com conteúdo técnico e SEO otimizado para lojas WooCommerce. O pipeline:
+> **Se você vende produtos técnicos e quer se destacar no Google — este projeto foi feito para você.**
+
+Ideal para lojas WooCommerce que trabalham com produtos que exigem **conteúdo técnico de qualidade**: especificações, fichas, aplicações, diferenciais e FAQ estruturado. Segmentos como:
+
+- ⚙️ Equipamentos industriais e elétricos
+- 🏗️ Ferramentas, componentes e peças técnicas
+- 🔬 Produtos B2B com ficha técnica detalhada
+- 🛒 Qualquer loja que quer **ranquear melhor** com conteúdo rico e validado
+
+> **Por que isso importa?**
+> Conteúdo técnico bem estruturado converte mais, reduz dúvidas do comprador e ranqueia mais alto no Google — especialmente em buscas B2B com intenção de compra técnica.
+
+---
+
+## 📋 O que o projeto faz
+
+Ferramenta Python que automatiza a criação de landing pages de produto com conteúdo técnico e SEO otimizado para WooCommerce. O pipeline:
 
 1. **Raspa** os dados atuais do produto na loja
-2. **Gera** textos, schemas JSON-LD e campos ACF via IA
+2. **Gera** textos, schemas JSON-LD e campos ACF via IA com foco técnico
 3. **Valida** o conteúdo com regras de negócio configuráveis
 4. **Publica** diretamente na API REST do WooCommerce
 
