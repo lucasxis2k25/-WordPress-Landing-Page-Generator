@@ -1,12 +1,12 @@
-# 🛍️ E-commerce Content Generator
+# 🚀 WordPress Landing Page Generator
 
-> Pipeline de geração automática de conteúdo de produto com IA (Gemini ou Claude) + publicação direta no WooCommerce.
+> Geração automática de landing pages de produto com IA (Gemini ou Claude) + publicação direta no WooCommerce via REST API.
 
 ---
 
 ## 📋 O que é este projeto
 
-Ferramenta Python para automatizar a criação de conteúdo técnico e SEO de produtos em lojas WooCommerce. O pipeline:
+Ferramenta Python para automatizar a criação de landing pages de produto com conteúdo técnico e SEO otimizado para lojas WooCommerce. O pipeline:
 
 1. **Raspa** os dados atuais do produto na loja
 2. **Gera** textos, schemas JSON-LD e campos ACF via IA
