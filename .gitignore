@@ -1,0 +1,46 @@
+# Environment
+.env
+*.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# Virtual environments
+venv/
+env/
+.venv/
+ENV/
+
+# Data / outputs (não versionar dados reais)
+gerador/dados/
+gerador/dados_antigos/
+gerador/output/
+gerador/audit_db.json
+gerador/produtos_db.json
+gerador/automacao/scraped_data/
+mapeamento de produto/data/
+mapeamento de produto/input/
+mapeamento de produto/outputs/
+*.xlsx
+*.parquet
+
+# Streamlit
+.streamlit/secrets.toml
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
